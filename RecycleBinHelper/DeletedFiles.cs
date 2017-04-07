@@ -65,10 +65,26 @@ namespace RecycleBinHelper
             _files.Sort(new FileDisplacedDateComparer());
         }
 
+        // Failed to instantiate Shell32.Shell when build on Win10 and run on Win7
+        // Try to implete a function
+        // Ref: https://social.msdn.microsoft.com/Forums/vstudio/en-US/b25e2b8f-141a-4a1c-a73c-1cb92f953b2b/instantiate-shell32shell-object-in-windows-8?forum=clr
+
+        private Shell32.Folder GetShell32NameSpaceFolder(Object folder)
+        {
+            Type shellAppType = Type.GetTypeFromProgID("Shell.Application");
+
+            Object shell = Activator.CreateInstance(shellAppType);
+            return (Shell32.Folder)shellAppType.InvokeMember("NameSpace",
+            System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { folder });
+        }
+
         public void Refresh()
         {
+            /*
             Shell shell = new Shell();
             Folder recycleBin = shell.NameSpace(10);
+            */
+            Folder recycleBin = GetShell32NameSpaceFolder(10);
 
             _files.Clear();
             foreach (FolderItem2 item in recycleBin.Items())
@@ -76,7 +92,9 @@ namespace RecycleBinHelper
                 _files.Add(item);
             }
 
-            Marshal.FinalReleaseComObject(shell);
+            //Marshal.FinalReleaseComObject(shell);
+
+
         }
 
         public string Empty()
@@ -96,10 +114,12 @@ namespace RecycleBinHelper
                 catch (System.UnauthorizedAccessException exception)
                 {
                     ret += $"{item.Name}\tUnauthorized\n";
+                    Console.WriteLine("Unauthorized");
                 }
                 catch (Exception exception)
                 {
                     ret += $"{item.Name}\t{exception.Message}\n";
+                    Console.WriteLine("Failed");
                 }
             }
             return ret;

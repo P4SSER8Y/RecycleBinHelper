@@ -18,3 +18,9 @@ __Examples__
 
 + `RecycleBinHelper 0` remove all the items
 + `RecycleBinHelper 7 -s`  remove the items older than one week
+
+Update
+--------------
+
+### V0.1.2-alpha
++ Bug avoided: replace Shell32.Shell.Namespace method

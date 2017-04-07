@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using Shell32;
+using System.Windows.Forms;
 
 namespace RecycleBinHelper
 {
@@ -103,7 +103,7 @@ namespace RecycleBinHelper
                 {
                     var message = deletedFiles.Empty();
                     if (message.Length > 0)
-                        MessageBox.Show(message, "ERROR Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(message+"\nYou may need to delete them yourself.", "ERROR Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
